@@ -1,9 +1,33 @@
+Project Title:subscription-marketplace-system.
+
 Project Description:Developed multiple full-stack and backend-focused applications using Node.js and Express.js, including a real-time subscription marketplace, chat system, task management API, and e-commerce backend. Designed and implemented scalable RESTful APIs for authentication, data management, and business logic, while integrating WebSockets for real-time communication. Built responsive user interfaces using HTML5, CSS3, and JavaScript, and ensured efficient performance through proper error handling, debugging, and optimized architecture. Utilized Git and GitHub for version control and followed MVC design patterns to maintain clean, scalable, and maintainable code
+Project Features:
+1.Scalable Backend with Node.js & Express.js
+Developed high-performance server-side applications capable of handling multiple user requests efficiently.
+
+2.RESTful API Development
+Designed secure and structured APIs for seamless data exchange between frontend and backend systems.
+
+3.Real-Time Communication (WebSockets)
+Implemented real-time features like notifications and chat using WebSockets (Socket.io).
+
+4.Authentication & Authorization
+Built secure user login and access control using JWT to protect application data.
+
+5.MVC Architecture & Clean Code Structure
+Followed modular design patterns to ensure maintainable, scalable, and organized code.
+Tech Stack:
+ 
+Backend:Node.js,Express.js
+Frontend:HTML5,CSS3,JavaScript
+APIs & Communication:RESTful APIs,WebSockets (Socket.io)
+Database:MongoDB
+Tools & Version Control:Git,GitHub,Postman,VS Code
 ```Project Structure:
 subscription-marketplace/
 │
 ├── client/                        # Frontend (HTML, CSS, JS)
-│   ├── css/
+│   ├── css/  
 │   ├── js/
 │   ├── index.html
 │   └── dashboard.html
