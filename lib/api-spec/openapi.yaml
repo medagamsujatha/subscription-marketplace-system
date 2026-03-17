@@ -1,15 +1,20 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: SubSpace Subscription Marketplace API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: subscriptions
+    description: Subscription service listings
+  - name: categories
+    description: Service categories
+  - name: user-subscriptions
+    description: User subscription management
 paths:
   /healthz:
     get:
@@ -24,6 +29,176 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /subscriptions:
+    get:
+      operationId: listSubscriptions
+      tags: [subscriptions]
+      summary: List all subscription services
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: search
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: minPrice
+          schema:
+            type: number
+          required: false
+        - in: query
+          name: maxPrice
+          schema:
+            type: number
+          required: false
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [price, name, rating, newest]
+          required: false
+      responses:
+        "200":
+          description: List of subscription services
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubscriptionService"
+    post:
+      operationId: createSubscription
+      tags: [subscriptions]
+      summary: Create a new subscription service listing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubscriptionService"
+      responses:
+        "201":
+          description: Created subscription service
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriptionService"
+
+  /subscriptions/{id}:
+    get:
+      operationId: getSubscription
+      tags: [subscriptions]
+      summary: Get a subscription service by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: Subscription service details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriptionService"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /categories:
+    get:
+      operationId: listCategories
+      tags: [categories]
+      summary: List all categories
+      responses:
+        "200":
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+
+  /user-subscriptions:
+    get:
+      operationId: listUserSubscriptions
+      tags: [user-subscriptions]
+      summary: List user's active subscriptions
+      responses:
+        "200":
+          description: List of user subscriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserSubscription"
+    post:
+      operationId: createUserSubscription
+      tags: [user-subscriptions]
+      summary: Subscribe to a service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserSubscription"
+      responses:
+        "201":
+          description: Created user subscription
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSubscription"
+
+  /user-subscriptions/{id}:
+    delete:
+      operationId: cancelUserSubscription
+      tags: [user-subscriptions]
+      summary: Cancel a subscription
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: Subscription cancelled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSubscription"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /stats:
+    get:
+      operationId: getMarketplaceStats
+      tags: [subscriptions]
+      summary: Get marketplace statistics
+      responses:
+        "200":
+          description: Marketplace stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketplaceStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +209,210 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required:
+        - error
+        - message
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        icon:
+          type: string
+        description:
+          type: string
+        serviceCount:
+          type: integer
+      required:
+        - id
+        - name
+        - slug
+        - icon
+        - description
+        - serviceCount
+
+    SubscriptionService:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        logo:
+          type: string
+        categoryId:
+          type: integer
+        categoryName:
+          type: string
+        categorySlug:
+          type: string
+        priceMonthly:
+          type: number
+        priceAnnual:
+          type: number
+          nullable: true
+        currency:
+          type: string
+        rating:
+          type: number
+        reviewCount:
+          type: integer
+        subscriberCount:
+          type: integer
+        features:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+        isFeatured:
+          type: boolean
+        website:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - description
+        - logo
+        - categoryId
+        - categoryName
+        - categorySlug
+        - priceMonthly
+        - currency
+        - rating
+        - reviewCount
+        - subscriberCount
+        - features
+        - tags
+        - isFeatured
+        - createdAt
+
+    CreateSubscriptionService:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        logo:
+          type: string
+        categoryId:
+          type: integer
+        priceMonthly:
+          type: number
+        priceAnnual:
+          type: number
+          nullable: true
+        currency:
+          type: string
+        features:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+        website:
+          type: string
+          nullable: true
+      required:
+        - name
+        - description
+        - logo
+        - categoryId
+        - priceMonthly
+        - currency
+        - features
+        - tags
+
+    UserSubscription:
+      type: object
+      properties:
+        id:
+          type: integer
+        serviceId:
+          type: integer
+        serviceName:
+          type: string
+        serviceLogo:
+          type: string
+        planType:
+          type: string
+          enum: [monthly, annual]
+        price:
+          type: number
+        currency:
+          type: string
+        status:
+          type: string
+          enum: [active, cancelled, paused]
+        startedAt:
+          type: string
+        renewsAt:
+          type: string
+          nullable: true
+        cancelledAt:
+          type: string
+          nullable: true
+        categoryName:
+          type: string
+      required:
+        - id
+        - serviceId
+        - serviceName
+        - serviceLogo
+        - planType
+        - price
+        - currency
+        - status
+        - startedAt
+        - categoryName
+
+    CreateUserSubscription:
+      type: object
+      properties:
+        serviceId:
+          type: integer
+        planType:
+          type: string
+          enum: [monthly, annual]
+      required:
+        - serviceId
+        - planType
+
+    MarketplaceStats:
+      type: object
+      properties:
+        totalServices:
+          type: integer
+        totalCategories:
+          type: integer
+        totalSubscribers:
+          type: integer
+        avgRating:
+          type: number
+      required:
+        - totalServices
+        - totalCategories
+        - totalSubscribers
+        - avgRating

@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "SubSpace - Subscription Marketplace"
+version = "1.0.0"
+id = "artifacts/subspace"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+localPort = 24565
+name = "web"
+paths = ["/"]
+
+[services.development]
+run = "pnpm --filter @workspace/subspace run dev"
+
+[services.env]
+PORT = "24565"
+BASE_PATH = "/"
+
+[services.production]
+build = ["pnpm", "--filter", "@workspace/subspace", "run", "build"]
+publicDir = "artifacts/subspace/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"

@@ -1,0 +1,19 @@
+packages:
+  "framer-motion": "For smooth page transitions and stagger animations in lists"
+  "date-fns": "For formatting subscription dates"
+  "lucide-react": "For beautiful consistent icons"
+
+images:
+  - path: "artifacts/subspace/public/images/hero-bg.png"
+    description: "Abstract modern geometric background with deep navy base and vibrant electric blue and purple gradient light leaks, clean and premium corporate SaaS aesthetic"
+    aspect_ratio: "16:9"
+  - path: "artifacts/subspace/public/images/pattern-dots.png"
+    description: "Subtle clean dotted pattern on white background, low opacity, minimalist design element"
+    aspect_ratio: "1:1"
+  - path: "artifacts/subspace/public/images/empty-state.png"
+    description: "Minimalist 3D illustration of an empty floating dashboard or open box, soft pastel colors, clean modern tech style"
+    aspect_ratio: "4:3"
+
+notes:
+  - "The app connects to ws://localhost/ws for real-time subscriber count updates"
+  - "Using @workspace/api-client-react for all data fetching mutations"
